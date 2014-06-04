@@ -27,6 +27,7 @@ public class DonationSigns extends JavaPlugin {
 	public static final Logger log = Logger.getLogger("Minecraft");
 	
 	static LinkedHashMap<Integer, String> donators = new LinkedHashMap<Integer, String>();
+	static LinkedHashMap<Integer, String> text = new LinkedHashMap<Integer, String>();
 	static LinkedHashMap<String, Integer> signs = new LinkedHashMap<String, Integer>();
 	
 	public void onEnable() {
@@ -47,6 +48,9 @@ public class DonationSigns extends JavaPlugin {
 			ObjectOutputStream oos2 = new ObjectOutputStream(new FileOutputStream(getDataFolder() + File.separator + "signs.ser"));
 			oos2.writeObject(signs);
 			oos2.close();
+			ObjectOutputStream oos3 = new ObjectOutputStream(new FileOutputStream(getDataFolder() + File.separator + "signs.ser"));
+			oos3.writeObject(text);
+			oos3.close();
 		} catch (Exception e) {
 			log.warning("[" + getName() + "] Files could not be saved!");
 			e.printStackTrace();
@@ -60,8 +64,10 @@ public class DonationSigns extends JavaPlugin {
 		try {
 			donators = (LinkedHashMap<Integer, String>) new ObjectInputStream(new FileInputStream(getDataFolder() + File.separator + "donators.ser")).readObject();
 			signs = (LinkedHashMap<String, Integer>) new ObjectInputStream(new FileInputStream(getDataFolder() + File.separator + "signs.ser")).readObject();
+			text = (LinkedHashMap<Integer, String>) new ObjectInputStream(new FileInputStream(getDataFolder() + File.separator + "text.ser")).readObject();
 			new ObjectInputStream(new FileInputStream(getDataFolder() + File.separator + "donators.ser")).close();
 			new ObjectInputStream(new FileInputStream(getDataFolder() + File.separator + "signs.ser")).close();
+			new ObjectInputStream(new FileInputStream(getDataFolder() + File.separator + "text.ser")).close();
 			
 		} catch (Exception e) {
 			log.warning("[" + getName() + "] Files could not be read! All files are now ignored.");
@@ -72,24 +78,40 @@ public class DonationSigns extends JavaPlugin {
 	
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 	    if(command.getName().equalsIgnoreCase("ranksign")) {
-			if(args.length>0) {
+			if(args.length>1) {
 				if(sender.isOp()) {
 					String s = args[0];
+					String t = args[1];
 					LinkedHashMap<Integer, String> temp = new LinkedHashMap<Integer, String>();
+					
 					temp.put(1, s);
 					for(Integer i : donators.keySet()) {
 						if(i <= 10) {
 							temp.put(i+1, donators.get(i));
-							System.out.println(i + ":" + temp.get(i));
 						}
 					}
 					donators = temp;
+					
+					temp = new LinkedHashMap<Integer, String>();
+					temp.put(1, t);
+					for(Integer i : text.keySet()) {
+						if(i <= 10) {
+							temp.put(i+1, text.get(i));
+						}
+					}
+					text = temp;
+					
+					
 					if(signs.keySet()==null)return true;
 					for(String sign : signs.keySet()) {
 						refreshSign(sign, signs.get(sign));
 					}
 					sender.sendMessage(ChatColor.AQUA+"Recent Donators Updated!");
+				}else {
+					sender.sendMessage(ChatColor.RED+"You do not have permission for this command.");
 				}
+			}else {
+				sender.sendMessage(ChatColor.RED+"Command used incorrectly, type /ranksign [username] [text]");
 			}
 	    }
 		return true;
@@ -110,7 +132,8 @@ public class DonationSigns extends JavaPlugin {
 		if(DonationSigns.makeLocation(loc).getBlock().getState() instanceof Sign) {
 			Sign s = (Sign) DonationSigns.makeLocation(loc).getBlock().getState();
 			s.setLine(0, "Recent Buyer "+i);
-			s.setLine(1, DonationSigns.donators.get(i));
+			s.setLine(1, DonationSigns.text.get(i));
+			s.setLine(2, DonationSigns.donators.get(i));
 			refreshHead(DonationSigns.makeLocation(loc), DonationSigns.donators.get(i));
 			s.update(true);
 		}else {
