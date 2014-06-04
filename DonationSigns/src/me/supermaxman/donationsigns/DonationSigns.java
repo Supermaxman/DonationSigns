@@ -128,7 +128,6 @@ public class DonationSigns extends JavaPlugin {
 	}
 	
 	public static void refreshSign(String loc, int i){
-		System.out.println(i);
 		if(DonationSigns.makeLocation(loc).getBlock().getState() instanceof Sign) {
 			Sign s = (Sign) DonationSigns.makeLocation(loc).getBlock().getState();
 			s.setLine(0, "Recent Buyer "+i);
