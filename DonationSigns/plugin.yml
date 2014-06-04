@@ -1,0 +1,9 @@
+name: DonationSigns
+main: me.supermaxman.donationsigns.DonationSigns
+version: 1.0.0
+author: Supermaxman
+description: DonationSigns!
+commands:
+    ranksign:
+        description: add new name to top signs
+        usage: /<command> <name>
