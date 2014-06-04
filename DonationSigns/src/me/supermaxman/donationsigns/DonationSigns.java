@@ -48,7 +48,7 @@ public class DonationSigns extends JavaPlugin {
 			ObjectOutputStream oos2 = new ObjectOutputStream(new FileOutputStream(getDataFolder() + File.separator + "signs.ser"));
 			oos2.writeObject(signs);
 			oos2.close();
-			ObjectOutputStream oos3 = new ObjectOutputStream(new FileOutputStream(getDataFolder() + File.separator + "signs.ser"));
+			ObjectOutputStream oos3 = new ObjectOutputStream(new FileOutputStream(getDataFolder() + File.separator + "text.ser"));
 			oos3.writeObject(text);
 			oos3.close();
 		} catch (Exception e) {

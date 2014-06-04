@@ -15,6 +15,9 @@ public class DonationSignListener implements Listener {
 			e.setCancelled(true);
 			try {
 				int i = Integer.parseInt(e.getLine(0).substring(8, 9));
+				if(e.getLine(0).substring(8, 10).equals("10")) {
+					i=10;
+				}
 				DonationSigns.signs.put(DonationSigns.makeString(e.getBlock().getLocation()), i);
 				DonationSigns.refreshSign(DonationSigns.makeString(e.getBlock().getLocation()), i);
 			}catch(Exception ex) {
