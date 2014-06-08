@@ -102,9 +102,13 @@ public class DonationSigns extends JavaPlugin {
 					text = temp;
 					
 					
-					if(signs.keySet()==null)return true;
+					if(signs.keySet()==null)return true;					
 					for(String sign : signs.keySet()) {
-						refreshSign(sign, signs.get(sign));
+						if(signs.get(sign)!=null) {
+							refreshSign(sign, signs.get(sign));
+						}else {
+							signs.remove(sign);
+						}
 					}
 					sender.sendMessage(ChatColor.AQUA+"Recent Donators Updated!");
 				}else {
